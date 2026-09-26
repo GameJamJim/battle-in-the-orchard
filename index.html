@@ -15,7 +15,7 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:16/9}
 .card .name{font-size:12px;font-weight:950;letter-spacing:.06em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .meter{height:12px;border:2px solid #574657;border-radius:8px;background:#d3c9c8;overflow:hidden;margin:4px 0}
 .heroHealth{display:flex;align-items:center;gap:6px}.heroHealth .meter{flex:1;min-width:18px}
-.scars{font-size:10px;font-weight:950;color:#98536a;white-space:nowrap}.scars span{font-size:17px;line-height:10px;letter-spacing:-4px;padding-right:4px}
+.scars{font-size:10px;font-weight:950;color:#98536a;white-space:nowrap}.scars span{display:inline-flex;align-items:center;vertical-align:middle;gap:1px}.scars svg{width:11px;height:16px;filter:drop-shadow(1px 1px 0 #613848)}
 .fill{height:100%;width:100%;background:#54ad87;transition:width .15s}.enemy .fill{background:#e27a98}
 .card small{font-size:11px;font-weight:750}
 .centerHud{text-align:center;max-width:33%;padding-top:2px;color:#544457;font-size:12px;font-weight:900;text-shadow:0 1px #fff}
@@ -40,9 +40,10 @@ button{cursor:pointer;touch-action:manipulation;border:3px solid #604659;border-
 button:hover{filter:brightness(1.07)}button:active{transform:translateY(4px);box-shadow:0 1px 0 #6b4e5c}
 button:focus-visible{outline:3px solid #268aaa;outline-offset:4px}
 #slow{background:#efa3ba}#block{background:#a6dbdf}#mute{background:#fff8ee;font-size:12px;padding:8px 12px;min-height:32px;box-shadow:0 3px 0 #6b4e5c}
+#reset{display:none;background:#fff8ee;font-size:12px;padding:8px 12px;min-height:32px;box-shadow:0 3px 0 #6b4e5c}
 .foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:8px 3px;color:#785e73;font-size:12px;font-weight:700}
-@media(max-width:650px){main{padding:6px}.tag{display:none}.hud{padding:5px;gap:3px}.card{padding:3px 5px;border-width:2px;width:34%}.card .name,.centerHud{font-size:9px}.card small{font-size:8px}.meter{height:8px;margin:2px 0}.scars{font-size:8px}.scars span{font-size:12px;letter-spacing:-3px}.panel{padding:18px}.panel p{font-size:14px}.controls{margin-top:14px;gap:7px}button{font-size:14px;padding:10px;flex:1}.foot{font-size:10px}}
-@media(hover:none) and (pointer:coarse){.overlay{position:fixed;z-index:10;padding:12px}.panel{max-height:calc(100dvh - 24px);overflow-y:auto}.desktopHint{display:none}.mobileHint{display:block}.controls:not([hidden]){display:flex}.controls button{flex:1;min-width:29%;min-height:70px;font-size:clamp(14px,4vw,20px)}.foot span{display:none}}
+@media(max-width:650px){main{padding:6px}.tag{display:none}.hud{padding:5px;gap:3px}.card{padding:3px 5px;border-width:2px;width:34%}.card .name,.centerHud{font-size:9px}.card small{font-size:8px}.meter{height:8px;margin:2px 0}.scars{font-size:8px}.scars svg{width:9px;height:14px}.panel{padding:18px}.panel p{font-size:14px}.controls{margin-top:14px;gap:7px}button{font-size:14px;padding:10px;flex:1}.foot{font-size:10px}}
+@media(hover:none) and (pointer:coarse){.overlay{position:fixed;z-index:10;padding:12px}.panel{max-height:calc(100dvh - 24px);overflow-y:auto}.desktopHint{display:none}.mobileHint{display:block}.controls:not([hidden]){display:flex}.controls button{flex:1;min-width:29%;min-height:70px;font-size:clamp(14px,4vw,20px)}.foot{justify-content:flex-end}.foot span{display:none}.footButtons{display:flex;flex-direction:column;align-items:stretch;gap:6px}#reset{display:block}}
 </style></head><body><main>
 <div class="top"><h1>BATTLE IN THE ORCHARD</h1><span class="tag">A Hamurai timing action game</span></div>
 <div class="shell"><canvas id="game" width="960" height="540" aria-label="Hamurai timing action game"></canvas>
@@ -51,7 +52,7 @@ button:focus-visible{outline:3px solid #268aaa;outline-offset:4px}
 <div class="card enemy"><div id="foeName" class="name"></div><div class="meter"><div id="foeBar" class="fill"></div></div><small id="foeNumber"></small></div></div>
 <div id="overlay" class="overlay"><div class="panel"><h2 id="overlayTitle">BATTLE IN<br>THE ORCHARD</h2><p id="overlayText">Watch the movement. Press Fast or Slow as Hamurai connects; press Block as an enemy attack lands. Five foes, one run. Clear them taking damage twice or less to reveal more.</p><p class="hint desktopHint">A / Left / J = Fast · S / Down / K = Slow · D / Right / Space = Block.</p><p class="hint mobileHint">Tap FAST or SLOW as Hamurai connects. Tap BLOCK when an enemy attack lands.</p><div id="result" class="result" hidden><div class="resultTop"><span>RANK</span><span id="resultRank"></span></div><div id="resultTrail" aria-label="Level results"></div><strong id="resultStage"></strong><div>Score: <strong id="resultScore"></strong></div><div id="resultDetail"></div></div><div class="endButtons"><button id="start" type="button">START RUN</button><button id="share" type="button" hidden>SHARE RESULT</button></div><span id="shareStatus" role="status"></span></div></div></div>
 <div id="controls" class="controls" hidden><button id="fast" type="button">FAST</button><button id="slow" type="button">SLOW</button><button id="block" type="button">BLOCK</button></div>
-<div class="foot"><span>Time the contact. Empty presses cost 4 HP. Press R to restart the run.</span><button id="mute" type="button">SOUND ON</button></div>
+<div class="foot"><span>Time the contact. Empty presses cost 4 HP. Press R to restart the run.</span><div class="footButtons"><button id="mute" type="button">SOUND ON</button><button id="reset" type="button">RESET</button></div></div>
 </main><script>
 
 'use strict';
@@ -293,10 +294,12 @@ const heroBar=document.querySelector('#heroBar');
 const scarBadge=document.querySelector('#scarBadge');
 const scarMarks=document.querySelector('#scarMarks');
 const scarCount=document.querySelector('#scarCount');
+const scarIcon='<svg viewBox="0 0 14 20" aria-hidden="true" focusable="false"><path d="M8 1 11 4 8 7 12 9 8 12 10 16 6 19 5 15 2 13 5 10 2 7 6 5Z" fill="#b92342" stroke="#622a3d" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.5 3 8 5 6 7 8 9 6 12 7 15" fill="none" stroke="#f77f88" stroke-width="1.2" stroke-linecap="round"/></svg>';
 const foeBar=document.querySelector('#foeBar');
 const heroNumber=document.querySelector('#heroNumber');
 const foeNumber=document.querySelector('#foeNumber');
 const muteButton=document.querySelector('#mute');
+const resetButton=document.querySelector('#reset');
 let audioCtx=null,muted=false;
 function playSfx(kind,source='') {
   if(muted) return;
@@ -358,7 +361,7 @@ function hudUpdate(){
   levelLabel.textContent=`${level===5?'SECRET 6 / 6':`${level+1} / 5`}  ·  ${opponents[level].subtitle}`;
   scoreLabel.textContent=`SCORE ${score.toLocaleString()}${combo>1?'  ·  '+combo+' COMBO':''}`;
   heroBar.style.width=`${heroHP}%`;
-  scarMarks.textContent=damageEvents?'╱'.repeat(damageEvents):'—';
+  scarMarks.innerHTML=damageEvents?scarIcon.repeat(damageEvents):'—';
   scarCount.textContent=damageEvents;
   scarBadge.setAttribute('aria-label',`Damage taken ${damageEvents} ${damageEvents===1?'time':'times'}`);
   foeBar.style.width=`${Math.max(0,foeHP/opponents[level].hp*100)}%`;
@@ -929,6 +932,7 @@ shareButton.addEventListener('click',async()=>{
   }catch(e){shareStatus.textContent='Copy unavailable here. Try a secure browser page.';}
 });
 muteButton.addEventListener('click',()=>{muted=!muted;muteButton.textContent=muted?'SOUND OFF':'SOUND ON';});
+resetButton.addEventListener('click',beginRun);
 requestAnimationFrame(draw);
 
 </script></body></html>
